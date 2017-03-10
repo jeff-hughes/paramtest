@@ -11,7 +11,7 @@
 #'   Each set of parameters will be passed to \code{func} in turn.
 #' @param n.iter Number of iterations (per set of params).
 #' @param output Specifies how \code{run_test} provides the ultimate output from
-#'   func: can return a "list", a "dataframe", or a "vector". Note that
+#'   func: can return a "list", a "data.frame", or a "vector". Note that
 #'   the output from the supplied function must be able to be coerced into this
 #'   output type.
 #' @param boot Whether or not to use bootstrapped data to pass along to
@@ -61,7 +61,7 @@
 #' power_sim <- run_test(lm_test, params=data.frame(N=c(200, 300)), n.iter=5000, b0=0, b1=.15)
 #' @export
 run_test <- function(func, params=NULL, n.iter=1,
-    output=c('list', 'dataframe', 'vector'), boot=FALSE, bootParams=NULL,
+    output=c('list', 'data.frame', 'vector'), boot=FALSE, bootParams=NULL,
     parallel=c('no', 'multicore', 'snow'), ncpus=1, cl=NULL, beep=NULL, ...) {
 
     dots <- list(...)
@@ -69,13 +69,16 @@ run_test <- function(func, params=NULL, n.iter=1,
 
     # cross each param value with every other one, to create all combinations
     if (!is.null(params)) {
-        grid <- expand.grid(params, KEEP.OUT.ATTRS=FALSE)
-        grid_output <- grid
-        names(grid_output) <- paste0(names(grid_output), '.test')
-        nSets <- nrow(grid)
+        if (is.data.frame(params)) {
+            prms <- split(params, seq(nrow(params)))  # convert to list
+        } else {
+            prms <- params  # already a list
+        }
+        prms_output <- params
+        nSets <- length(prms)
     } else {
-        grid <- data.frame()  # empty
-        grid_output <- data.frame()
+        prms <- list()  # empty
+        prms_output <- NA
         nSets <- 1
     }
 
@@ -126,7 +129,7 @@ run_test <- function(func, params=NULL, n.iter=1,
             if (boot && 'data' %in% names(bootParams)) {
                 boot_output <- do.call(boot::boot, args=c(list(statistic=func,
                     R=n.iter, parallel=parallel, ncpus=ncpus, cl=cl), bootParams,
-                    c(as.list(grid[set, , drop=FALSE]), dots)))
+                    c(as.list(prms[[set]]), dots)))
 
                 col_names <- names(boot_output$t0)
                 output <- boot_output$t
@@ -140,19 +143,19 @@ run_test <- function(func, params=NULL, n.iter=1,
                     if (have_mc) {
                         output <- do.call(parallel::mclapply,
                             args=c(list(X=1:n.iter, FUN=func, mc.cores=ncpus),
-                                c(as.list(grid[set, , drop=FALSE]), dots)))
+                                c(as.list(prms[[set]]), dots)))
                     } else if (have_snow) {
                         output <- do.call(parallel::parLapply,
                             args=c(list(cl=clust, X=1:n.iter, fun=func),
-                                c(as.list(grid[set, , drop=FALSE]), dots)))
+                                c(as.list(prms[[set]]), dots)))
                     }
                 } else {
                     output <- do.call(lapply, args=c(list(X=1:n.iter, FUN=func),
-                        c(as.list(grid[set, , drop=FALSE]), dots)))
+                        c(as.list(prms[[set]]), dots)))
                 }
 
                 # convert output to data frame/vector if requested
-                if (outputType == 'dataframe') {
+                if (outputType == 'data.frame') {
                     col_names <- names(output[[1]])
                     output <- do.call(rbind.data.frame, output)
                     colnames(output) <- col_names
@@ -161,17 +164,9 @@ run_test <- function(func, params=NULL, n.iter=1,
                 }
             }
 
-            if (outputType == 'dataframe') {
+            if (outputType == 'data.frame') {
                 rowsEachIter <- nrow(output) / n.iter
-                if (!is.null(params)) {
-                    extendGrid <- matrix(rep(unlist(grid_output[set, , drop=FALSE]),
-                        each=n.iter), nrow=n.iter)
-                    colnames(extendGrid) <- names(grid_output)
-
-                    result <- cbind(sim=rep(1:n.iter, each=rowsEachIter), extendGrid, output)
-                } else {
-                    result <- cbind(sim=rep(1:n.iter, each=rowsEachIter), output)
-                }
+                result <- cbind(iter=rep(1:n.iter, each=rowsEachIter), output)
 
                 if (is.null(allResults)) {
                     allResults <- result
@@ -194,11 +189,11 @@ run_test <- function(func, params=NULL, n.iter=1,
         parallel::stopCluster(clust)
     }
 
-    if (outputType == 'dataframe') {
+    if (outputType == 'data.frame') {
         allResults <- as.data.frame(allResults)
     }
 
-    output <- list(results=allResults, tests=grid, n.iter=n.iter, timing=timing)
+    output <- list(results=allResults, tests=prms_output, n.iter=n.iter, timing=timing)
     class(output) <- 'paramtest'
 
     # Ding! Fries are done
