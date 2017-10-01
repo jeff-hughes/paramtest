@@ -7,12 +7,12 @@
 #'   factors (columns) as measured by observed variables (rows).
 #' @param effects_struct A matrix describing the variances and covariances of
 #'   the latent variables in the model.
-#' @param nCases Number of sample cases to generate.
-#' @param trueScores Whether or not to include the data for each variable as
+#' @param n_cases Number of sample cases to generate.
+#' @param true_scores Whether or not to include the data for each variable as
 #'   measured without error. If set to TRUE, the resulting data frame will
 #'   include all the variables in the model twice: once with measurement error,
 #'   and once without.
-#' @return Returns a data frame with \code{nCases} rows and columns for each
+#' @return Returns a data frame with \code{n_cases} rows and columns for each
 #'   observed and latent variable. These variables will approximately accord
 #'   with the factor structure and effects structure that was specified, within
 #'   sampling error.
@@ -36,14 +36,14 @@
 #'     nrow=3, ncol=3, byrow=TRUE, dimnames=list(
 #'     c('x1', 'x2', 'y'), c('x1', 'x2', 'y')))
 #'
-#' sample_data <- gen_data(fmodel, effects, nCases=1000)
+#' sample_data <- gen_data(fmodel, effects, n_cases=1000)
 #' round(var(sample_data), 2)
 #' round(cor(sample_data), 2)
 #' summary(lm(y ~ x1 + x2, data=sample_data))
 #'     # note that beta coefficients are much smaller, due to measurement error
 #' @export
-gen_data <- function(factor_struct, effects_struct, nCases=1000,
-    trueScores=FALSE) {
+gen_data <- function(factor_struct, effects_struct, n_cases=1000,
+    true_scores=FALSE) {
 
     nVars <- dim(factor_struct)[1]  # problem size determined by input to the function
     nLatent <- dim(factor_struct)[2]
@@ -55,20 +55,20 @@ gen_data <- function(factor_struct, effects_struct, nCases=1000,
     uniqueness <- 1 - communality
     error_weight <- diag(sqrt(uniqueness))  # how much to weight the errors
 
-    latent_scores <- matrix(rnorm(nCases * nLatent), nCases)
+    latent_scores <- matrix(rnorm(n_cases * nLatent), n_cases)
         # generate true scores for the latent variables
     latent_scores <- latent_scores %*% effects_struct
         # ensure true scores reflect structural relations between the factors
 
-    true_scores <- latent_scores %*% tmodel
-    error <- matrix(rnorm(nCases * nVars), nCases)
+    true_sc <- latent_scores %*% tmodel
+    error <- matrix(rnorm(n_cases * nVars), n_cases)
         # generate normal error
     wtd_error <- error %*% error_weight
-    observed_scores <- true_scores + wtd_error
+    observed_scores <- true_sc + wtd_error
 
-    if (trueScores) {
-        colnames(true_scores) <- paste0(colnames(observed_scores), '_true')
-        return(data.frame(observed_scores, true_scores))
+    if (true_scores) {
+        colnames(true_sc) <- paste0(colnames(observed_scores), '_true')
+        return(data.frame(observed_scores, true_sc))
     } else {
         return(data.frame(observed_scores))
     }
