@@ -30,9 +30,9 @@
 #'   \code{parallel = 'snow'}. If not supplied, a cluster on the local machine
 #'   is created for the duration of the iterations.
 #' @param beep Include a numeric value or character vector indicating the sound
-#'   you wish to play once the tests are done running. Requires the "beepr"
-#'   package, and information about supported values is available in the
-#'   documentation for that package.
+#'   you wish to play once the tests are done running. If set to TRUE, a random
+#'   sound will be played. Requires the "beepr" package, and information about
+#'   supported values is available in the documentation for that package.
 #' @param ... Additional arguments to be passed to \code{func}. If you do not
 #'   need to vary certain parameters in your model, you can pass them to
 #'   \code{func} here.
@@ -69,17 +69,24 @@ run_test <- function(func, params=NULL, n.iter=1,
     dots <- list(...)
     outputType <- match.arg(output)
 
-    # cross each param value with every other one, to create all combinations
+    # set up combinations of parameters to test
     if (!is.null(params)) {
-        if (is.data.frame(params)) {
-            prms <- split(params, seq(nrow(params)))  # convert to list
+        if (is.list(params) && !is.data.frame(params)){
+            # assume each element is a set of parameters
+            if (length(params) > 1) {
+                prms <- do.call(rbind.data.frame, params)
+            # assume one parameter, multiple values
+            } else {
+                prms <- as.data.frame(params)
+            }
         } else {
-            prms <- params  # already a list
+            prms <- params
         }
-        prms_output <- params
-        nSets <- length(prms)
+        prms_output <- prms
+        names(prms_output) <- paste0(names(prms_output), '.test')
+        nSets <- nrow(prms)
     } else {
-        prms <- list()  # empty
+        prms <- data.frame()  # empty
         prms_output <- NA
         nSets <- 1
     }
@@ -123,52 +130,123 @@ run_test <- function(func, params=NULL, n.iter=1,
         prettyNum(nSets * n.iter, big.mark=',', scientific=FALSE),
         ' tests...\n'))
 
+    # cleanup to do when function ends, whether naturally or after error
+    on.exit({
+        # stop cluster if we created it
+        if (ncpus > 1 && have_snow && is.null(cl)) {
+            parallel::stopCluster(clust)
+        }
+
+        # Ding! Fries are done
+        if (!is.null(beep)) {
+            if (requireNamespace('beepr', quietly=TRUE)) {
+                if (is.logical(beep) && beep == TRUE) {
+                    beep <- 0
+                }
+                beepr::beep(beep)
+            }
+        }
+    })
+
     allResults <- NULL  # variable to fill with final output
 
     timing <- system.time(
         for (set in 1:nSets) {
-            # bootstrap data
-            if (boot && 'data' %in% names(bootParams)) {
-                boot_output <- do.call(boot::boot, args=c(list(statistic=func,
-                    R=n.iter, parallel=parallel, ncpus=ncpus, cl=cl), bootParams,
-                    c(as.list(prms[[set]]), dots)))
 
-                col_names <- names(boot_output$t0)
-                output <- boot_output$t
-                colnames(output) <- col_names
+            # special case with no parameters to pass to function
+            if (nrow(prms) == 0 && length(dots) == 0) {
 
-            # simulate data
-            } else {
-                if (ncpus > 1 &&
-                    (have_mc || have_snow)) {
+                # bootstrap data
+                if (boot && 'data' %in% names(bootParams)) {
+                    boot_output <- do.call(boot::boot, args=c(list(statistic=func,
+                        R=n.iter, parallel=parallel, ncpus=ncpus, cl=cl), bootParams))
 
-                    if (have_mc) {
-                        output <- do.call(parallel::mclapply,
-                            args=c(list(X=1:n.iter, FUN=func, mc.cores=ncpus),
-                                c(as.list(prms[[set]]), dots)))
-                    } else if (have_snow) {
-                        output <- do.call(parallel::parLapply,
-                            args=c(list(cl=clust, X=1:n.iter, fun=func),
-                                c(as.list(prms[[set]]), dots)))
-                    }
+                    col_names <- names(boot_output$t0)
+                    output <- boot_output$t
+                    colnames(output) <- col_names
+
+                # simulate data
                 } else {
-                    output <- do.call(lapply, args=c(list(X=1:n.iter, FUN=func),
-                        c(as.list(prms[[set]]), dots)))
+                    if (ncpus > 1 &&
+                        (have_mc || have_snow)) {
+
+                        if (have_mc) {
+                            output <- do.call(parallel::mclapply,
+                                args=c(list(X=1:n.iter, FUN=func, mc.cores=ncpus)))
+                        } else if (have_snow) {
+                            output <- do.call(parallel::parLapply,
+                                args=c(list(cl=clust, X=1:n.iter, fun=func)))
+                        }
+                    } else {
+                        output <- do.call(lapply, args=c(list(X=1:n.iter, FUN=func)))
+                    }
                 }
 
-                # convert output to data frame/vector if requested
-                if (outputType == 'data.frame') {
-                    col_names <- names(output[[1]])
-                    output <- do.call(rbind.data.frame, output)
+            # pass parameters to function
+            } else {
+                opts <- list()
+                if (nrow(prms) > 0) {
+                    opts <- as.list(prms[set, ])
+                }
+                if (length(dots) > 0) {
+                    if (length(opts) > 0){
+                        opts <- c(opts, dots)
+                    } else {
+                        opts <- dots
+                    }
+                }
+
+                # bootstrap data
+                if (boot && 'data' %in% names(bootParams)) {
+                    boot_output <- do.call(boot::boot, args=c(list(statistic=func,
+                        R=n.iter, parallel=parallel, ncpus=ncpus, cl=cl), bootParams,
+                        opts))
+
+                    col_names <- names(boot_output$t0)
+                    output <- boot_output$t
                     colnames(output) <- col_names
-                } else if (outputType == 'vector') {
-                    output <- unlist(output)
+
+                # simulate data
+                } else {
+                    if (ncpus > 1 &&
+                        (have_mc || have_snow)) {
+
+                        if (have_mc) {
+                            output <- do.call(parallel::mclapply,
+                                args=c(list(X=1:n.iter, FUN=func, mc.cores=ncpus),
+                                    opts))
+                        } else if (have_snow) {
+                            output <- do.call(parallel::parLapply,
+                                args=c(list(cl=clust, X=1:n.iter, fun=func),
+                                    opts))
+                        }
+                    } else {
+                        output <- do.call(lapply, args=c(list(X=1:n.iter, FUN=func),
+                            opts))
+                    }
                 }
             }
 
+
+            # convert output to data frame/vector if requested
             if (outputType == 'data.frame') {
+                col_names <- names(output[[1]])
+                output <- do.call(rbind.data.frame, output)
+                colnames(output) <- col_names
+
                 rowsEachIter <- nrow(output) / n.iter
-                result <- cbind(iter=rep(1:n.iter, each=rowsEachIter), output)
+                    # covers case where function outputs more than one row
+                if (nrow(prms) > 0) {
+                    result <- data.frame(
+                        iter=rep(1:n.iter, each=rowsEachIter),
+                        prms_output[set, , drop=FALSE],
+                        output,
+                        row.names=1:(n.iter*rowsEachIter))
+                } else {
+                    result <- data.frame(
+                        iter=rep(1:n.iter, each=rowsEachIter),
+                        output)
+                }
 
                 if (is.null(allResults)) {
                     allResults <- result
@@ -177,6 +255,10 @@ run_test <- function(func, params=NULL, n.iter=1,
                 }
                 row.names(allResults) <- NULL
             } else {
+                if (outputType == 'vector') {
+                    output <- unlist(output)
+                }
+
                 if (is.null(allResults)) {
                     allResults <- output
                 } else {
@@ -186,24 +268,12 @@ run_test <- function(func, params=NULL, n.iter=1,
         }
     )
 
-    # stop cluster if we created it
-    if (ncpus > 1 && have_snow && is.null(cl)) {
-        parallel::stopCluster(clust)
-    }
-
     if (outputType == 'data.frame') {
         allResults <- as.data.frame(allResults)
     }
 
-    output <- list(results=allResults, tests=prms_output, n.iter=n.iter, timing=timing)
+    output <- list(results=allResults, tests=prms, n.iter=n.iter, timing=timing)
     class(output) <- 'paramtest'
-
-    # Ding! Fries are done
-    if (!is.null(beep)) {
-        if (requireNamespace('beepr', quietly=TRUE)) {
-            beepr::beep(beep)
-        }
-    }
 
     return(output)
 }
