@@ -2,26 +2,26 @@
 % Please edit documentation in R/helpers.R
 \name{results}
 \alias{results}
+\alias{results.paramtest}
 \title{Return results of a parameter test.}
 \usage{
 results(test, ...)
+
+\method{results}{paramtest}(test, ...)
 }
 \arguments{
-\item{test}{A paramtest object.}
+\item{test}{An object of type 'paramtest'.}
 
-\item{...}{Additional arguments to be passed to the particular method for the
-given object tye.}
+\item{...}{Not currently implemented; used to ensure consistency with S3 generic.}
 }
 \value{
-The form of the value returned by \code{results} depends on the class
-  of its argument. See the documentation of the particular methods for
-  details of what is produced by that method.
+Returns a data frame with all the data returned from each test.
 }
 \description{
-\code{results} is a generic function that extracts the raw data from a
-parameter test.
+\code{results} returns the raw data from a parameter test.
 }
-\seealso{
-\code{\link{results.paramtest}}
-}
+\section{Methods (by class)}{
+\itemize{
+\item \code{paramtest}: Results for a parameter test.
+}}
 

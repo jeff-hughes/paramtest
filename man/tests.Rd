@@ -2,26 +2,28 @@
 % Please edit documentation in R/helpers.R
 \name{tests}
 \alias{tests}
+\alias{tests.paramtest}
 \title{Return the parameter values that were tested by paramtest.}
 \usage{
-tests(sim, ...)
+tests(test, ...)
+
+\method{tests}{paramtest}(test, ...)
 }
 \arguments{
-\item{...}{Additional arguments to be passed to the particular method for the
-given object tye.}
+\item{test}{An object of type 'paramtest'.}
 
-\item{test}{A paramtest object.}
+\item{...}{Not currently implemented; used to ensure consistency with S3 generic.}
 }
 \value{
-The form of the value returned by \code{tests} depends on the class
-  of its argument. See the documentation of the particular methods for
-  details of what is produced by that method.
+Returns a data frame with one row for each set of tests that
+  was performed.
 }
 \description{
-\code{tests} is a generic function that extracts information about the set of
-specific tests (parameter values) for a parameter test.
+\code{tests} extracts information about the set of specific tests (parameter
+values) for a parameter test.
 }
-\seealso{
-\code{\link{tests.paramtest}}
-}
+\section{Methods (by class)}{
+\itemize{
+\item \code{paramtest}: Parameter values for a parameter test.
+}}
 

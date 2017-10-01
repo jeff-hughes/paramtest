@@ -9,7 +9,7 @@
 results <- function(test, ...) UseMethod('results')
 
 
-#' @describeIn results
+#' @describeIn results Results for a parameter test.
 #' @export
 results.paramtest <- function(test, ...) {
     return(test$results)
@@ -26,10 +26,10 @@ results.paramtest <- function(test, ...) {
 #' @return Returns a data frame with one row for each set of tests that
 #'   was performed.
 #' @export
-tests <- function(sim, ...) UseMethod('tests')
+tests <- function(test, ...) UseMethod('tests')
 
 
-#' @describeIn tests
+#' @describeIn tests Parameter values for a parameter test.
 #' @export
 tests.paramtest <- function(test, ...) {
     return(test$tests)
@@ -48,7 +48,7 @@ tests.paramtest <- function(test, ...) {
 n.iter <- function(test, ...) UseMethod('n.iter')
 
 
-#' @describeIn n.iter
+#' @describeIn n.iter Number of iterations for a parameter test.
 #' @export
 n.iter.paramtest <- function(test, ...) {
     return(test$n.iter)
@@ -67,7 +67,7 @@ n.iter.paramtest <- function(test, ...) {
 timing <- function(test, ...) UseMethod('timing')
 
 
-#' @describeIn timing
+#' @describeIn timing Timing information for a paramter test.
 #' @export
 timing.paramtest <- function(test, ...) {
     return(test$timing)

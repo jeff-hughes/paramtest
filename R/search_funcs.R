@@ -5,7 +5,8 @@
 #' can be given to \code{grid_search}, which will fully cross all parameters so
 #' that each parameter value is tested at all other values of all parameters.
 #'
-#' @param func A user-defined function.
+#' @param func A user-defined function. The first argument to this function will
+#'   be the iteration number.
 #' @param params A list of parameters to be passed to \code{func}. The
 #'   parameters are fully crossed so that each parameter value is tested at all
 #'   other values of all parameters. (For example, list(N=c(5, 10), x=c(1, 2))
@@ -45,19 +46,19 @@
 #'   one-element vector.
 #' @seealso \code{\link{boot}}
 #' @examples
-#' lm_test <- function(N, b0, b1) {
-#' x <- rnorm(N, 0, 1)
-#' y <- rnorm(N, b0 + b1*x, sqrt(1 - b1^2))
-#' data <- data.frame(y, x)
-#' model <- lm(y ~ x, data)
+#' lm_test <- function(iter, N, b0, b1) {
+#'     x <- rnorm(N, 0, 1)
+#'     y <- rnorm(N, b0 + b1*x, sqrt(1 - b1^2))
+#'     data <- data.frame(y, x)
+#'     model <- lm(y ~ x, data)
 #'
-#' # capture output from model summary
-#' est <- coef(summary(model))['x', 'Estimate']
-#' se <- coef(summary(model))['x', 'Std. Error']
-#' p <- coef(summary(model))['x', 'Pr(>|t|)']
+#'     # capture output from model summary
+#'     est <- coef(summary(model))['x', 'Estimate']
+#'     se <- coef(summary(model))['x', 'Std. Error']
+#'     p <- coef(summary(model))['x', 'Pr(>|t|)']
 #'
-#' return(c(xm=mean(x), xsd=sd(x), ym=mean(y), ysd=sd(y), est=est, se=se, p=p,
-#'     sig=est > 0 & p <= .05))
+#'     return(c(xm=mean(x), xsd=sd(x), ym=mean(y), ysd=sd(y), est=est, se=se, p=p,
+#'         sig=est > 0 & p <= .05))
 #' }
 #'
 #' # test power for sample size N=200 and N=300, with 5000 iterations for each
@@ -90,7 +91,8 @@ grid_search <- function(func, params=NULL, n.iter=1,
 #' will then (uniformly) randomly select values within those bounds on each
 #' iteration.
 #'
-#' @param func A user-defined function.
+#' @param func A user-defined function. The first argument to this function will
+#'   be the iteration number.
 #' @param params A named list of parameters to be passed to \code{func}. For
 #'   continuous numeric values, a parameter must provide a two-element named
 #'   vector with names "lower" and "upper" to specify the lower and upper bounds
@@ -133,19 +135,19 @@ grid_search <- function(func, params=NULL, n.iter=1,
 #'   one-element vector.
 #' @seealso \code{\link{boot}}
 #' @examples
-#' lm_test <- function(N, b0, b1) {
-#' x <- rnorm(N, 0, 1)
-#' y <- rnorm(N, b0 + b1*x, sqrt(1 - b1^2))
-#' data <- data.frame(y, x)
-#' model <- lm(y ~ x, data)
+#' lm_test <- function(iter, N, b0, b1) {
+#'     x <- rnorm(N, 0, 1)
+#'     y <- rnorm(N, b0 + b1*x, sqrt(1 - b1^2))
+#'     data <- data.frame(y, x)
+#'     model <- lm(y ~ x, data)
 #'
-#' # capture output from model summary
-#' est <- coef(summary(model))['x', 'Estimate']
-#' se <- coef(summary(model))['x', 'Std. Error']
-#' p <- coef(summary(model))['x', 'Pr(>|t|)']
+#'     # capture output from model summary
+#'     est <- coef(summary(model))['x', 'Estimate']
+#'     se <- coef(summary(model))['x', 'Std. Error']
+#'     p <- coef(summary(model))['x', 'Pr(>|t|)']
 #'
-#' return(c(xm=mean(x), xsd=sd(x), ym=mean(y), ysd=sd(y), est=est, se=se, p=p,
-#'     sig=est > 0 & p <= .05))
+#'     return(c(xm=mean(x), xsd=sd(x), ym=mean(y), ysd=sd(y), est=est, se=se, p=p,
+#'         sig=est > 0 & p <= .05))
 #' }
 #'
 #' # test power for sample sizes between N=200 and N=300, with 5000 iterations total
@@ -162,7 +164,7 @@ random_search <- function(func, params=NULL, n.sample=1, n.iter=1,
             if (!is.null(names(params[[p]])) &&
                     all.equal(names(params[[p]]), c('lower', 'upper'))) {
                 # continuous numeric
-                grid[[names(params)[p]]] <- runif(n.sample, params[[p]]['lower'],
+                grid[[names(params)[p]]] <- stats::runif(n.sample, params[[p]]['lower'],
                     params[[p]]['upper'])
             } else {
                 # either integer values or non-numeric values

@@ -2,26 +2,27 @@
 % Please edit documentation in R/helpers.R
 \name{timing}
 \alias{timing}
+\alias{timing.paramtest}
 \title{Return the timing information of a parameter test.}
 \usage{
 timing(test, ...)
+
+\method{timing}{paramtest}(test, ...)
 }
 \arguments{
-\item{test}{A paramtest object.}
+\item{test}{An object of type 'paramtest'.}
 
-\item{...}{Additional arguments to be passed to the particular method for the
-given object tye.}
+\item{...}{Not currently implemented; used to ensure consistency with S3 generic.}
 }
 \value{
-The form of the value returned by \code{timing} depends on the class
-  of its argument. See the documentation of the particular methods for
-  details of what is produced by that method.
+Returns an object of class "proc_time" with information about how
+  long the parameter test process took.
 }
 \description{
-\code{timing} is a generic function that extracts the raw data from a
-parameter test.
+\code{timing} returns the information about how long a parameter test took.
 }
-\seealso{
-\code{\link{timing.paramtest}}
-}
+\section{Methods (by class)}{
+\itemize{
+\item \code{paramtest}: Timing information for a paramter test.
+}}
 

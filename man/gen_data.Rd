@@ -4,7 +4,7 @@
 \alias{gen_data}
 \title{Generate data through a factor matrix and effects matrix.}
 \usage{
-gen_data(factor_struct, effects_struct, nCases = 1000, trueScores = FALSE)
+gen_data(factor_struct, effects_struct, n_cases = 1000, true_scores = FALSE)
 }
 \arguments{
 \item{factor_struct}{A matrix describing the measurement model of latent
@@ -13,15 +13,15 @@ factors (columns) as measured by observed variables (rows).}
 \item{effects_struct}{A matrix describing the variances and covariances of
 the latent variables in the model.}
 
-\item{nCases}{Number of sample cases to generate.}
+\item{n_cases}{Number of sample cases to generate.}
 
-\item{trueScores}{Whether or not to include the data for each variable as
+\item{true_scores}{Whether or not to include the data for each variable as
 measured without error. If set to TRUE, the resulting data frame will
 include all the variables in the model twice: once with measurement error,
 and once without.}
 }
 \value{
-Returns a data frame with \code{nCases} rows and columns for each
+Returns a data frame with \code{n_cases} rows and columns for each
   observed and latent variable. These variables will approximately accord
   with the factor structure and effects structure that was specified, within
   sampling error.
@@ -50,7 +50,7 @@ effects <- matrix(
     nrow=3, ncol=3, byrow=TRUE, dimnames=list(
     c('x1', 'x2', 'y'), c('x1', 'x2', 'y')))
 
-sample_data <- gen_data(fmodel, effects, nCases=1000)
+sample_data <- gen_data(fmodel, effects, n_cases=1000)
 round(var(sample_data), 2)
 round(cor(sample_data), 2)
 summary(lm(y ~ x1 + x2, data=sample_data))

@@ -6,7 +6,8 @@
 #' functions such as \code{grid_search} and \code{random_search}, which provide
 #' different methods for generating the parameters to be tested.
 #'
-#' @param func A user-defined function.
+#' @param func A user-defined function. The first argument to this function will
+#'   be the iteration number.
 #' @param params A list or data frame of parameters to be passed to \code{func}.
 #'   Each set of parameters will be passed to \code{func} in turn.
 #' @param n.iter Number of iterations (per set of params).
@@ -42,7 +43,7 @@
 #'   one-element vector.
 #' @seealso \code{\link{boot}}
 #' @examples
-#' lm_test <- function(N, b0, b1) {
+#' lm_test <- function(iter, N, b0, b1) {
 #'     x <- rnorm(N, 0, 1)
 #'     y <- rnorm(N, b0 + b1*x, sqrt(1 - b1^2))
 #'     data <- data.frame(y, x)

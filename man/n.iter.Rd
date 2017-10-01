@@ -2,26 +2,27 @@
 % Please edit documentation in R/helpers.R
 \name{n.iter}
 \alias{n.iter}
+\alias{n.iter.paramtest}
 \title{Return the number of iterations performed by a parameter test.}
 \usage{
 n.iter(test, ...)
+
+\method{n.iter}{paramtest}(test, ...)
 }
 \arguments{
-\item{test}{A paramtest object.}
+\item{test}{An object of type 'paramtest'.}
 
-\item{...}{Additional arguments to be passed to the particular method for the
-given object tye.}
+\item{...}{Not currently implemented; used to ensure consistency with S3 generic.}
 }
 \value{
-The form of the value returned by \code{n.iter} depends on the class
-  of its argument. See the documentation of the particular methods for
-  details of what is produced by that method.
+Returns the number of iterations done in each test.
 }
 \description{
-\code{n.iter} is a generic function that extracts information about the
-number of iterations (per specific test) performed by a parameter test.
+\code{n.iter} extracts information about the number of iterations (per
+specific test) performed by a parameter test.
 }
-\seealso{
-\code{\link{n.iter.paramtest}}
-}
+\section{Methods (by class)}{
+\itemize{
+\item \code{paramtest}: Number of iterations for a parameter test.
+}}
 

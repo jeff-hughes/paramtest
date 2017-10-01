@@ -2,7 +2,7 @@ Package: paramtest
 Type: Package
 Title: Run a Function Iteratively While Varying Parameters
 Version: 0.1.0
-Author@R: person("Jeffrey", "Hughes", email="jeff.hughes@gmail.com",
+Authors@R: person("Jeffrey", "Hughes", email="jeff.hughes@gmail.com",
     role=c("aut", "cre"))
 Description: This package allows you to run simulations or other functions while
     easily varying parameters from one iteration to the next. Some common use
@@ -10,11 +10,11 @@ Description: This package allows you to run simulations or other functions while
     sets of simulations (e.g., estimating statistical power for
     complex models), or bootstrapping under various conditions. See the
     paramtest documentation for more information and examples.
-License: GPL=3
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:
-    boot
+    stats, boot
 Suggests:
     parallel,
     knitr,

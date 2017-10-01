@@ -55,13 +55,13 @@ gen_data <- function(factor_struct, effects_struct, n_cases=1000,
     uniqueness <- 1 - communality
     error_weight <- diag(sqrt(uniqueness))  # how much to weight the errors
 
-    latent_scores <- matrix(rnorm(n_cases * nLatent), n_cases)
+    latent_scores <- matrix(stats::rnorm(n_cases * nLatent), n_cases)
         # generate true scores for the latent variables
     latent_scores <- latent_scores %*% effects_struct
         # ensure true scores reflect structural relations between the factors
 
     true_sc <- latent_scores %*% tmodel
-    error <- matrix(rnorm(n_cases * nVars), n_cases)
+    error <- matrix(stats::rnorm(n_cases * nVars), n_cases)
         # generate normal error
     wtd_error <- error %*% error_weight
     observed_scores <- true_sc + wtd_error

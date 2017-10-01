@@ -1,4 +1,4 @@
 library(testthat)
-library(reghelper)
+library(paramtest)
 
-test_check("reghelper")
+test_check("paramtest")
