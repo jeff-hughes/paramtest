@@ -239,7 +239,7 @@ run_test <- function(func, params=NULL, n.iter=1,
 
             rowsEachIter <- 1
             if (outputType == 'data.frame') {
-                rowsEachIter <- nrow(output) / n.iter
+                rowsEachIter <- length(output) / n.iter
             }
 
             iterations <- rep(1:n.iter, each=rowsEachIter)
