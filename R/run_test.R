@@ -12,9 +12,10 @@
 #'   Each set of parameters will be passed to \code{func} in turn.
 #' @param n.iter Number of iterations (per set of params).
 #' @param output Specifies how \code{run_test} provides the ultimate output from
-#'   func: can return a "list", a "data.frame", or a "vector". Note that
-#'   the output from the supplied function must be able to be coerced into this
-#'   output type.
+#'   \code{func}: can return a "list" or a "data.frame". Note that if
+#'   "data.frame" is specified, the supplied function must return a vector,
+#'   matrix, or data frame, so it can be coerced into the data frame format. The
+#'   "list" option will accept any type of output.
 #' @param boot Whether or not to use bootstrapped data to pass along to
 #'   \code{func}. Using this option instead of bootstrapping within \code{func}
 #'   is preferable to take advantage of parallelization.
@@ -63,11 +64,18 @@
 #'     n.iter=5000, b0=0, b1=.15)
 #' @export
 run_test <- function(func, params=NULL, n.iter=1,
-    output=c('list', 'data.frame', 'vector'), boot=FALSE, bootParams=NULL,
+    output=c('list', 'data.frame'), boot=FALSE, bootParams=NULL,
     parallel=c('no', 'multicore', 'snow'), ncpus=1, cl=NULL, beep=NULL, ...) {
 
     dots <- list(...)
-    outputType <- match.arg(output)
+
+    # need to do this to avoid issues with match.arg when only two options
+    # if(missing(output) || length(output) > 1) {
+    #     outputType <- 'list'
+    # } else {
+    #     outputType <- match.arg(output)
+    # }
+    outputType <- match.arg(output, c('list', 'data.frame'))
 
     # set up combinations of parameters to test
     if (!is.null(params)) {
@@ -82,12 +90,13 @@ run_test <- function(func, params=NULL, n.iter=1,
         } else {
             prms <- params
         }
-        prms_output <- prms
-        names(prms_output) <- paste0(names(prms_output), '.test')
+        prms_df_output <- prms
+        names(prms_df_output) <- paste0(names(prms_df_output), '.test')
         nSets <- nrow(prms)
     } else {
         prms <- data.frame()  # empty
         prms_output <- NA
+        tests_summary <- NA
         nSets <- 1
     }
 
@@ -149,6 +158,7 @@ run_test <- function(func, params=NULL, n.iter=1,
     })
 
     allResults <- NULL  # variable to fill with final output
+    tests <- NULL  # data frame of same length as output, with params and iterations
 
     timing <- system.time(
         for (set in 1:nSets) {
@@ -227,6 +237,21 @@ run_test <- function(func, params=NULL, n.iter=1,
                 }
             }
 
+            rowsEachIter <- 1
+            if (outputType == 'data.frame') {
+                rowsEachIter <- nrow(output) / n.iter
+            }
+
+            iterations <- rep(1:n.iter, each=rowsEachIter)
+
+            if (nrow(prms) > 0) {
+                test <- data.frame(
+                    iter=iterations,
+                    prms[set, , drop=FALSE],
+                    row.names=1:(n.iter*rowsEachIter))
+                tests <- rbind(tests, test)
+            }
+
 
             # convert output to data frame/vector if requested
             if (outputType == 'data.frame') {
@@ -238,32 +263,20 @@ run_test <- function(func, params=NULL, n.iter=1,
                     # covers case where function outputs more than one row
                 if (nrow(prms) > 0) {
                     result <- data.frame(
-                        iter=rep(1:n.iter, each=rowsEachIter),
-                        prms_output[set, , drop=FALSE],
+                        iter=iterations,
+                        prms_df_output[set, , drop=FALSE],
                         output,
                         row.names=1:(n.iter*rowsEachIter))
                 } else {
                     result <- data.frame(
-                        iter=rep(1:n.iter, each=rowsEachIter),
+                        iter=iterations,
                         output)
                 }
 
-                if (is.null(allResults)) {
-                    allResults <- result
-                } else {
-                    allResults <- rbind(allResults, result)
-                }
+                allResults <- rbind(allResults, result)
                 row.names(allResults) <- NULL
             } else {
-                if (outputType == 'vector') {
-                    output <- unlist(output)
-                }
-
-                if (is.null(allResults)) {
-                    allResults <- output
-                } else {
-                    allResults <- c(allResults, output)
-                }
+                allResults <- c(allResults, output)
             }
         }
     )
@@ -272,7 +285,7 @@ run_test <- function(func, params=NULL, n.iter=1,
         allResults <- as.data.frame(allResults)
     }
 
-    output <- list(results=allResults, tests=prms, n.iter=n.iter, timing=timing)
+    output <- list(results=allResults, tests=tests, n.iter=n.iter, timing=timing)
     class(output) <- 'paramtest'
 
     return(output)

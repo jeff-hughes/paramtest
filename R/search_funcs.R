@@ -15,9 +15,10 @@
 #'   \code{func} in turn.
 #' @param n.iter Number of iterations (per set of params).
 #' @param output Specifies how \code{grid_search} provides the ultimate output
-#'   from func: can return a "list", a "data.frame", or a "vector". Note that
-#'   the output from the supplied function must be able to be coerced into this
-#'   output type.
+#'   from \code{func}: can return a "list" or a "data.frame". Note that if
+#'   "data.frame" is specified, the supplied function must return a vector,
+#'   matrix, or data frame, so it can be coerced into the data frame format. The
+#'   "list" option will accept any type of output.
 #' @param boot Whether or not to use bootstrapped data to pass along to
 #'   \code{func}. Using this option instead of bootstrapping within \code{func}
 #'   is preferable to take advantage of parallelization.
@@ -65,7 +66,7 @@
 #' power_sim <- grid_search(lm_test, params=list(N=c(200, 300)), n.iter=5000, b0=0, b1=.15)
 #' @export
 grid_search <- function(func, params=NULL, n.iter=1,
-    output=c('list', 'data.frame', 'vector'), boot=FALSE, bootParams=NULL,
+    output=c('list', 'data.frame'), boot=FALSE, bootParams=NULL,
     parallel=c('no', 'multicore', 'snow'), ncpus=1, cl=NULL, beep=NULL, ...) {
 
     # cross each param value with every other one, to create all combinations
@@ -104,9 +105,10 @@ grid_search <- function(func, params=NULL, n.iter=1,
 #' @param n.sample Number of times to sample from the parameter values.
 #' @param n.iter Number of iterations (per set of params).
 #' @param output Specifies how \code{random_search} provides the ultimate output
-#'   from func: can return a "list", a "data.frame", or a "vector". Note that
-#'   the output from the supplied function must be able to be coerced into this
-#'   output type.
+#'   from \code{func}: can return a "list" or a "data.frame". Note that if
+#'   "data.frame" is specified, the supplied function must return a vector,
+#'   matrix, or data frame, so it can be coerced into the data frame format. The
+#'   "list" option will accept any type of output.
 #' @param boot Whether or not to use bootstrapped data to pass along to
 #'   \code{func}. Using this option instead of bootstrapping within \code{func}
 #'   is preferable to take advantage of parallelization.
@@ -154,7 +156,7 @@ grid_search <- function(func, params=NULL, n.iter=1,
 #' power_sim <- random_search(lm_test, params=list(N=c(200, 300)), n.iter=5000, b0=0, b1=.15)
 #' @export
 random_search <- function(func, params=NULL, n.sample=1, n.iter=1,
-    output=c('list', 'data.frame', 'vector'), boot=FALSE, bootParams=NULL,
+    output=c('list', 'data.frame'), boot=FALSE, bootParams=NULL,
     parallel=c('no', 'multicore', 'snow'), ncpus=1, cl=NULL, beep=NULL, ...) {
 
     # create list of param values
