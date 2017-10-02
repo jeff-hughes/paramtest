@@ -4,8 +4,8 @@
 \alias{run_test}
 \title{Run a function iteratively, with options for parallel processing.}
 \usage{
-run_test(func, params = NULL, n.iter = 1, output = c("list", "data.frame",
-  "vector"), boot = FALSE, bootParams = NULL, parallel = c("no",
+run_test(func, params = NULL, n.iter = 1, output = c("list",
+  "data.frame"), boot = FALSE, bootParams = NULL, parallel = c("no",
   "multicore", "snow"), ncpus = 1, cl = NULL, beep = NULL, ...)
 }
 \arguments{
@@ -18,9 +18,10 @@ Each set of parameters will be passed to \code{func} in turn.}
 \item{n.iter}{Number of iterations (per set of params).}
 
 \item{output}{Specifies how \code{run_test} provides the ultimate output from
-func: can return a "list", a "data.frame", or a "vector". Note that
-the output from the supplied function must be able to be coerced into this
-output type.}
+\code{func}: can return a "list" or a "data.frame". Note that if
+"data.frame" is specified, the supplied function must return a vector,
+matrix, or data frame, so it can be coerced into the data frame format. The
+"list" option will accept any type of output.}
 
 \item{boot}{Whether or not to use bootstrapped data to pass along to
 \code{func}. Using this option instead of bootstrapping within \code{func}
@@ -42,9 +43,9 @@ operation.}
 is created for the duration of the iterations.}
 
 \item{beep}{Include a numeric value or character vector indicating the sound
-you wish to play once the tests are done running. Requires the "beepr"
-package, and information about supported values is available in the
-documentation for that package.}
+you wish to play once the tests are done running. If set to TRUE, a random
+sound will be played. Requires the "beepr" package, and information about
+supported values is available in the documentation for that package.}
 
 \item{...}{Additional arguments to be passed to \code{func}. If you do not
 need to vary certain parameters in your model, you can pass them to

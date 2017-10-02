@@ -6,9 +6,8 @@
 with options for parallel processing.}
 \usage{
 grid_search(func, params = NULL, n.iter = 1, output = c("list",
-  "data.frame", "vector"), boot = FALSE, bootParams = NULL,
-  parallel = c("no", "multicore", "snow"), ncpus = 1, cl = NULL,
-  beep = NULL, ...)
+  "data.frame"), boot = FALSE, bootParams = NULL, parallel = c("no",
+  "multicore", "snow"), ncpus = 1, cl = NULL, beep = NULL, ...)
 }
 \arguments{
 \item{func}{A user-defined function. The first argument to this function will
@@ -24,9 +23,10 @@ and N=10 and x=2.) Each set of parameters will then be passed to
 \item{n.iter}{Number of iterations (per set of params).}
 
 \item{output}{Specifies how \code{grid_search} provides the ultimate output
-from func: can return a "list", a "data.frame", or a "vector". Note that
-the output from the supplied function must be able to be coerced into this
-output type.}
+from \code{func}: can return a "list" or a "data.frame". Note that if
+"data.frame" is specified, the supplied function must return a vector,
+matrix, or data frame, so it can be coerced into the data frame format. The
+"list" option will accept any type of output.}
 
 \item{boot}{Whether or not to use bootstrapped data to pass along to
 \code{func}. Using this option instead of bootstrapping within \code{func}

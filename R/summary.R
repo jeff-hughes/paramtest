@@ -47,7 +47,7 @@ summary.paramtest <- function(object, ...) {
 #' \code{print.paramtest_summary} prints a summary of the various combinations
 #' of parameter values tested in a given parameter test.
 #'
-#' @param object An object of class 'paramtest_summary', from
+#' @param x An object of class 'paramtest_summary', from
 #'   \code{\link{summary.paramtest}}.
 #' @param ... Not currently implemented; used to ensure consistency with S3 generic.
 #' @return Returns a data frame with one row per set of unique tests.
