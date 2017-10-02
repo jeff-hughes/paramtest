@@ -255,9 +255,11 @@ run_test <- function(func, params=NULL, n.iter=1,
 
             # convert output to data frame/vector if requested
             if (outputType == 'data.frame') {
-                col_names <- names(output[[1]])
-                output <- do.call(rbind.data.frame, output)
-                colnames(output) <- col_names
+                if (is.list(output)) {
+                    col_names <- names(output[[1]])
+                    output <- do.call(rbind.data.frame, output)
+                    colnames(output) <- col_names
+                }
 
                 rowsEachIter <- nrow(output) / n.iter
                     # covers case where function outputs more than one row
@@ -276,6 +278,14 @@ run_test <- function(func, params=NULL, n.iter=1,
                 allResults <- rbind(allResults, result)
                 row.names(allResults) <- NULL
             } else {
+                # boot produces output as matrix, so must convert to list
+                if (is.matrix(output) || is.data.frame(output)) {
+                    output <- as.data.frame(output)
+                    result <- NULL
+                    for (i in seq(nrow(output))) {
+                        result <- c(result, output[i, ])
+                    }
+                }
                 allResults <- c(allResults, output)
             }
         }
