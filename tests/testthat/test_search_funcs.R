@@ -24,7 +24,7 @@ test_that('regression simulation, grid search', {
 
     expect_equal(class(test$results), 'data.frame')
     expect_equal(nrow(test$results), 40)
-    expect_equal(test$tests, expand.grid(N=c(200, 300), b1=c(.15, .25),
+    expect_equivalent(summary(test), expand.grid(N=c(200, 300), b1=c(.15, .25), n.iter=10,
         KEEP.OUT.ATTRS=FALSE))
 })
 

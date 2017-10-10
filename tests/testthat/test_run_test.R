@@ -36,14 +36,9 @@ test_that('regression simulation, data frame output', {
     params <- expand.grid(N=c(200, 300), b1=c(.15, .25))
 
     test <- run_test(lm_test, params=params, n.iter=10, output='data.frame')
-    test2 <- run_test(lm_test, params=params, n.iter=10, output='data.frame',
-        parallel='snow', ncpus=3)
 
     expect_equal(class(test$results), 'data.frame')
     expect_equal(nrow(test$results), 40)
-
-    expect_equal(class(test2$results), 'data.frame')
-    expect_equal(nrow(test2$results), 40)
 })
 
 
@@ -54,16 +49,6 @@ test_that('regression simulation, list output', {
 
     expect_equal(class(test$results), 'list')
     expect_equal(length(test$results), 40)
-})
-
-
-test_that('vector output', {
-    params <- expand.grid(N=c(200, 300))
-
-    test <- run_test(simple_test, params=params, n.iter=10, output='vector')
-
-    expect_equal(class(test$results), 'numeric')
-    expect_equal(length(test$results), 20)
 })
 
 
