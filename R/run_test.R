@@ -59,9 +59,9 @@
 #'         sig=est > 0 & p <= .05))
 #' }
 #'
-#' # test power for sample size N=200 and N=300, with 5000 iterations for each
+#' # test power for sample size N=200 and N=300, with 500 iterations for each
 #' power_sim <- run_test(lm_test, params=data.frame(N=c(200, 300)),
-#'     n.iter=5000, b0=0, b1=.15)
+#'     n.iter=500, b0=0, b1=.15)
 #' @export
 run_test <- function(func, params=NULL, n.iter=1,
     output=c('list', 'data.frame'), boot=FALSE, bootParams=NULL,

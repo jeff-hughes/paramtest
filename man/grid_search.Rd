@@ -84,8 +84,8 @@ lm_test <- function(iter, N, b0, b1) {
         sig=est > 0 & p <= .05))
 }
 
-# test power for sample size N=200 and N=300, with 5000 iterations for each
-power_sim <- grid_search(lm_test, params=list(N=c(200, 300)), n.iter=5000, b0=0, b1=.15)
+# test power for sample size N=200 and N=300, with 500 iterations for each
+power_sim <- grid_search(lm_test, params=list(N=c(200, 300)), n.iter=500, b0=0, b1=.15)
 }
 \seealso{
 \code{\link{boot}}
