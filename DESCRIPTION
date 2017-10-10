@@ -17,8 +17,14 @@ Imports:
     stats, boot
 Suggests:
     parallel,
-    knitr,
     beepr,
-    testthat
+    pwr,
+    ggplot2,
+    knitr,
+    nlme,
+    lavaan,
+    dplyr,
+    testthat,
+    rmarkdown
 VignetteBuilder: knitr
 RoxygenNote: 5.0.1
