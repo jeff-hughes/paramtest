@@ -196,7 +196,7 @@ run_test <- function(func, params=NULL, n.iter=1,
             } else {
                 opts <- list()
                 if (nrow(prms) > 0) {
-                    opts <- as.list(prms[set, ])
+                    opts <- as.list(prms[set, , drop=FALSE])
                 }
                 if (length(dots) > 0) {
                     if (length(opts) > 0){
@@ -239,7 +239,11 @@ run_test <- function(func, params=NULL, n.iter=1,
 
             rowsEachIter <- 1
             if (outputType == 'data.frame') {
-                rowsEachIter <- length(output) / n.iter
+                if (is.data.frame(output) || is.matrix(output)) {
+                    rowsEachIter <- nrow(output) / n.iter
+                } else {
+                    rowsEachIter <- length(output) / n.iter
+                }
             }
 
             iterations <- rep(1:n.iter, each=rowsEachIter)
