@@ -1,3 +1,11 @@
+## Resubmission
+
+This is a resubmission. In this version I have:
+
+* Put package names in single quotes.
+* Changed the description field to not start with "This package".
+
+
 ## Test environments
 
 * local Windows install, R 3.3.3
