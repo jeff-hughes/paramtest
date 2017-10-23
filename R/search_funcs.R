@@ -34,17 +34,15 @@
 #'   \code{parallel = 'snow'}. If not supplied, a cluster on the local machine
 #'   is created for the duration of the iterations.
 #' @param beep Include a numeric value or character vector indicating the sound
-#'   you wish to play once the tests are done running. Requires the "beepr"
+#'   you wish to play once the tests are done running. Requires the 'beepr'
 #'   package, and information about supported values is available in the
 #'   documentation for that package.
 #' @param ... Additional arguments to be passed to \code{func}. If you do not
 #'   need to vary certain parameters in your model, you can pass them to
 #'   \code{func} here.
 #' @return Returns a list (by default) with one element per iteration. If
-#'   \code{output} is specified as "dataframe", then \code{func} must
-#'   return a (named) vector with the results you wish to capture; if
-#'   \code{output} is specified as "vector", then \code{func} must return a
-#'   one-element vector.
+#'   \code{output} is specified as "data.frame", then \code{func} must
+#'   return a (named) vector with the results you wish to capture.
 #' @seealso \code{\link{boot}}
 #' @examples
 #' lm_test <- function(iter, N, b0, b1) {
@@ -124,17 +122,15 @@ grid_search <- function(func, params=NULL, n.iter=1,
 #'   \code{parallel = 'snow'}. If not supplied, a cluster on the local machine
 #'   is created for the duration of the iterations.
 #' @param beep Include a numeric value or character vector indicating the sound
-#'   you wish to play once the tests are done running. Requires the "beepr"
+#'   you wish to play once the tests are done running. Requires the 'beepr'
 #'   package, and information about supported values is available in the
 #'   documentation for that package.
 #' @param ... Additional arguments to be passed to \code{func}. If you do not
 #'   need to vary certain parameters in your model, you can pass them to
 #'   \code{func} here.
 #' @return Returns a list (by default) with one element per iteration. If
-#'   \code{output} is specified as "dataframe", then \code{func} must
-#'   return a (named) vector with the results you wish to capture; if
-#'   \code{output} is specified as "vector", then \code{func} must return a
-#'   one-element vector.
+#'   \code{output} is specified as "data.frame", then \code{func} must
+#'   return a (named) vector with the results you wish to capture.
 #' @seealso \code{\link{boot}}
 #' @examples
 #' lm_test <- function(iter, N, b0, b1) {

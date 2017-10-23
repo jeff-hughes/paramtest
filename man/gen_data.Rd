@@ -56,4 +56,3 @@ round(cor(sample_data), 2)
 summary(lm(y ~ x1 + x2, data=sample_data))
     # note that beta coefficients are much smaller, due to measurement error
 }
-

@@ -48,7 +48,7 @@ operation.}
 is created for the duration of the iterations.}
 
 \item{beep}{Include a numeric value or character vector indicating the sound
-you wish to play once the tests are done running. Requires the "beepr"
+you wish to play once the tests are done running. Requires the 'beepr'
 package, and information about supported values is available in the
 documentation for that package.}
 
@@ -58,10 +58,8 @@ need to vary certain parameters in your model, you can pass them to
 }
 \value{
 Returns a list (by default) with one element per iteration. If
-  \code{output} is specified as "dataframe", then \code{func} must
-  return a (named) vector with the results you wish to capture; if
-  \code{output} is specified as "vector", then \code{func} must return a
-  one-element vector.
+  \code{output} is specified as "data.frame", then \code{func} must
+  return a (named) vector with the results you wish to capture.
 }
 \description{
 \code{grid_search} runs a user-defined function iteratively. Parameter values
@@ -90,4 +88,3 @@ power_sim <- grid_search(lm_test, params=list(N=c(200, 300)), n.iter=500, b0=0, 
 \seealso{
 \code{\link{boot}}
 }
-

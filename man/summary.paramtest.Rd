@@ -41,4 +41,3 @@ summary(power_sim)
 \seealso{
 \code{\link{run_test}}
 }
-

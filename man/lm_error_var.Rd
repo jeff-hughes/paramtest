@@ -28,4 +28,3 @@ independent} (i.e., uncorrelated).
 \examples{
 lm_error_var(var=1, .15, .3)  # returns error variance of 0.8875
 }
-

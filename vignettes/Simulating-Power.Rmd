@@ -18,9 +18,9 @@ knitr::opts_chunk$set(collapse=TRUE, comment='#>')
 
 # Simulating Power with the paramtest Package
 
-For simple statistical models (e.g., *t*-test, correlation), calculating the estimated power can be done analytically (for example, one can use the `pwr` package). But for more complex models, it is difficult to provide a good estimate of power without the use of simulation. Simulations repeatedly generate random data based on one's predefined model, then analyze each data set and count the proportion of results that are significant. That proportion is the estimated power for the model.
+For simple statistical models (e.g., *t*-test, correlation), calculating the estimated power can be done analytically (for example, one can use the 'pwr' package). But for more complex models, it is difficult to provide a good estimate of power without the use of simulation. Simulations repeatedly generate random data based on one's predefined model, then analyze each data set and count the proportion of results that are significant. That proportion is the estimated power for the model.
 
-The `paramtest` package makes this process simple by providing a general-purpose, flexible function to perform simulations. You simply create a function that generates the data and analyses you want, and then use one of the functions, such as `grid_search()`, to run your user-defined function repeatedly and collate the results. The `grid_search()` function allows you to easily run your function iteratively while varying particular parameters, so you can test the sensitivity of your analyses or how these parameters change the results.
+The 'paramtest' package makes this process simple by providing a general-purpose, flexible function to perform simulations. You simply create a function that generates the data and analyses you want, and then use one of the functions, such as `grid_search()`, to run your user-defined function repeatedly and collate the results. The `grid_search()` function allows you to easily run your function iteratively while varying particular parameters, so you can test the sensitivity of your analyses or how these parameters change the results.
 
 ```{r load_functions, message=FALSE}
 # load all packages used in this vignette
@@ -39,7 +39,7 @@ load('power_data.Rdata')
 
 ## Example: Simulating a *t*-test with paramtest
 
-If we wanted to estimate the power for a two-sample *t*-test, we could calculate it analytically using the `pwr` package:
+If we wanted to estimate the power for a two-sample *t*-test, we could calculate it analytically using the 'pwr' package:
 
 ```{r pwr_ttest}
 pwr.t.test(n=50, d=.5, type='two.sample')
@@ -71,11 +71,11 @@ results(power_ttest) %>%
     summarise(power=mean(sig))
 ```
 
-We first create a function that simulates normally distributed data for two groups, and performs a *t*-test. The *t* statistic and *p*-value are then returned as a named vector, along with a boolean value determining whether the test is significant or not. Finally, we use the `run_test` function to perform 5000 simulations, and then summarize the 'sig' value, which (by default) calculates the mean, giving us the proportion of simulations that were significant. This number agrees very closely with the analytic solution above.
+We first create a function that simulates normally distributed data for two groups, and performs a *t*-test. The *t* statistic and *p*-value are then returned as a named vector, along with a boolean value determining whether the test is significant or not. Finally, we use the `run_test()` function to perform 5000 simulations, and then summarize the 'sig' value, which (by default) calculates the mean, giving us the proportion of simulations that were significant. This number agrees very closely with the analytic solution above.
 
 ## Varying parameters
 
-While in the above example we used `run_test` because we were not varying any parameters, with the `paramtest` package we can also use a function called `grid_search` to easily vary parameters. For example, using the same *t*-test simulation as above:
+While in the above example we used `run_test()` because we were not varying any parameters, with the 'paramtest' package we can also use a function called `grid_search()` to easily vary parameters. For example, using the same *t*-test simulation as above:
 
 ```{r vary_params, eval=FALSE}
 # give 'params' a list of parameters we want to vary;
@@ -125,11 +125,11 @@ ggplot(power, aes(x=N.test, y=power, group=factor(d.test), colour=factor(d.test)
     theme_minimal()
 ```
 
-Note that `grid_search` will fully cross all parameters: the three sample sizes are tested at *d* = .2, and at *d* = .5. So be careful when adding new parameters, as this can greatly increase the total number of simulations to be run!
+Note that `grid_search()` will fully cross all parameters: the three sample sizes are tested at *d* = .2, and at *d* = .5. So be careful when adding new parameters, as this can greatly increase the total number of simulations to be run!
 
 ## Parallel processing
 
-In order to cut down on the time taken to run simulations, the `paramtest` package supports parallel processing via the `parallel` package. If your system has multiple processor cores or supports multithreading, you can incorporate this into your function call:
+In order to cut down on the time taken to run simulations, the 'paramtest' package supports parallel processing via the 'parallel' package. If your system has multiple processor cores or supports multithreading, you can incorporate this into your function call:
 
 ```{r parallel1, eval=FALSE}
 # time with no parallel processing (your mileage may very greatly)
@@ -156,7 +156,7 @@ Theoretically, when using *n* cores/threads, your code should take 1/*n* the amo
 
 ## Bootstrapping
 
-In addition to running a function that creates simulated data, the `paramtest` package can also handle bootstrapping, where you have data that you want to randomly sample from. This features relies on the `boot` package:
+In addition to running a function that creates simulated data, the 'paramtest' package can also handle bootstrapping, where you have data that you want to randomly sample from. This features relies on the 'boot' package:
 
 ```{r bootstrap, eval=FALSE}
 # user function must take data and indices as first two arguments; see 'boot'
@@ -189,7 +189,7 @@ results(power_ttest_boot) %>%
 
 ### Linear models
 
-We can use `grid_search` to calculate the power for a particular coefficient in a linear model:
+We can use `grid_search()` to calculate the power for a particular coefficient in a linear model:
 
 ```{r sim_linear, eval=FALSE}
 lm_test <- function(simNum, N, b1, b0=0, xm=0, xsd=1) {
@@ -505,4 +505,4 @@ results(power_sem) %>%
 
 ## Summary
 
-Simulating the statistical power of complex models can be challenging due to the number of parameters that one needs to estimate. Making assumptions about how the variables covary, how they relate to each other, etc. can make it difficult. However, using the `paramtest` package provides a flexible way to run simulations in order to properly estimate power across a variety of assumptions. Hopefully, the examples in this vignette can provide you with a useful template from which to create models that fit your particular needs.
+Simulating the statistical power of complex models can be challenging due to the number of parameters that one needs to estimate. Making assumptions about how the variables covary, how they relate to each other, etc. can make it difficult. However, using the 'paramtest' package provides a flexible way to run simulations in order to properly estimate power across a variety of assumptions. Hopefully, the examples in this vignette can provide you with a useful template from which to create models that fit your particular needs.

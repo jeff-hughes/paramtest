@@ -22,4 +22,3 @@ of parameter values tested in a given parameter test.
 \seealso{
 \code{\link{summary.paramtest}}
 }
-
