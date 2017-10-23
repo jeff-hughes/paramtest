@@ -23,6 +23,6 @@ Returns an object of class "proc_time" with information about how
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{paramtest}: Timing information for a paramter test.
+\item \code{paramtest}: Timing information for a parameter test.
 }}
 

@@ -67,7 +67,7 @@ n.iter.paramtest <- function(test, ...) {
 timing <- function(test, ...) UseMethod('timing')
 
 
-#' @describeIn timing Timing information for a paramter test.
+#' @describeIn timing Timing information for a parameter test.
 #' @export
 timing.paramtest <- function(test, ...) {
     return(test$timing)
