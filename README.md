@@ -4,6 +4,10 @@ paramtest
 
 The `paramtest` R package includes a set of functions used to iterate a function across multiple sets of parameters. It allows you to train algorithms, run simulations, etc. while easily varying parameters.
 
+This package offers a flexible way to undergo a grid search or random search when varying parameters. Users must provide a function to iterate over, so all inputs and outputs of the function are specified by the user, offering complete control over the process. `paramtest` encapsulates the search process (along with options to parallelize over multiple processor cores), but is otherwise intentionally left very general-purpose.
+
+However, the package was made with machine learning hyperparameter optimization and statistical power simulations in mind—see the vignettes for examples of these use cases.
+
 Please be aware that this package is still in development, and as such, bugs may still exist, and functions and function parameters may still be subject to change.
 
 To install the most recent stable release, use the following code:
