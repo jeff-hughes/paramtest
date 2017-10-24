@@ -8,9 +8,22 @@ This package offers a flexible way to undergo a grid search or random search whe
 
 However, the package was made with machine learning hyperparameter optimization and statistical power simulations in mind—see the vignettes for examples of these use cases.
 
-Please be aware that this package is still in development, and as such, bugs may still exist, and functions and function parameters may still be subject to change.
+Version 0.1.0 has been released. However, please be aware that this package is still in development, and as such, bugs may still exist, and functions and function parameters may still be subject to change.
 
-To install the most recent stable release, use the following code:
+The most recent stable release is available on CRAN, and can be installed like so:
+
+``` r
+install.packages("paramtest")
+```
+
+You can also install the stable release from Github:
+
+``` r
+install.packages("devtools")
+devtools::install_github("jeff-hughes/paramtest@v0.1.0", build_vignettes=TRUE)
+```
+
+If you would like to install the latest development version, you can do so with the following code:
 
 ``` r
 install.packages("devtools")
@@ -23,7 +36,7 @@ Networked computers can sometimes result in installation issues, as the `install
 
 ``` r
 install.packages("devtools")
-devtools::install_github("jeff-hughes/paramtest", build_vignettes=TRUE,
+devtools::install_github("jeff-hughes/paramtest@v0.1.0", build_vignettes=TRUE,
     args=c('--library="N:/path/to/libraries/"'))
 ```
 
