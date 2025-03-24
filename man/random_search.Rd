@@ -5,10 +5,20 @@
 \title{Run a function iteratively using a random search approach for parameter
 values, with options for parallel processing.}
 \usage{
-random_search(func, params = NULL, n.sample = 1, n.iter = 1,
-  output = c("list", "data.frame"), boot = FALSE, bootParams = NULL,
-  parallel = c("no", "multicore", "snow"), ncpus = 1, cl = NULL,
-  beep = NULL, ...)
+random_search(
+  func,
+  params = NULL,
+  n.sample = 1,
+  n.iter = 1,
+  output = c("list", "data.frame"),
+  boot = FALSE,
+  bootParams = NULL,
+  parallel = c("no", "multicore", "snow"),
+  ncpus = 1,
+  cl = NULL,
+  beep = NULL,
+  ...
+)
 }
 \arguments{
 \item{func}{A user-defined function. The first argument to this function will
@@ -38,7 +48,7 @@ matrix, or data frame, so it can be coerced into the data frame format. The
 is preferable to take advantage of parallelization.}
 
 \item{bootParams}{If \code{boot=TRUE}, then use \code{bootParams} to pass
-along a named list of arguments to the \code{\link{boot}} function. The
+along a named list of arguments to the \code{\link[boot]{boot}} function. The
 statistic and R parameters will be filled automatically, but at minimum you
 will need to pass along data. Information about parallel processing will
 also be passed along automatically.}
@@ -92,5 +102,5 @@ lm_test <- function(iter, N, b0, b1) {
 power_sim <- random_search(lm_test, params=list(N=c(200, 300)), n.iter=500, b0=0, b1=.15)
 }
 \seealso{
-\code{\link{boot}}
+\code{\link[boot]{boot}}
 }

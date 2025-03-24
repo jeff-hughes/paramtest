@@ -24,6 +24,6 @@ values) for a parameter test.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{paramtest}: Parameter values for a parameter test.
-}}
+\item \code{tests(paramtest)}: Parameter values for a parameter test.
 
+}}

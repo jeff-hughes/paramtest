@@ -1,7 +1,7 @@
 Package: paramtest
 Type: Package
 Title: Run a Function Iteratively While Varying Parameters
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person("Jeffrey", "Hughes", email="jeff.hughes@gmail.com",
     role=c("aut", "cre"))
 Description: Run simulations or other functions while easily varying parameters
@@ -12,7 +12,6 @@ Description: Run simulations or other functions while easily varying parameters
     and examples.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 Imports:
     stats, boot
 Suggests:
@@ -27,4 +26,4 @@ Suggests:
     testthat,
     rmarkdown
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 7.3.1

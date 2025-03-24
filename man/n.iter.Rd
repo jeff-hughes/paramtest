@@ -23,6 +23,6 @@ specific test) performed by a parameter test.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{paramtest}: Number of iterations for a parameter test.
-}}
+\item \code{n.iter(paramtest)}: Number of iterations for a parameter test.
 
+}}

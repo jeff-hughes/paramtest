@@ -1,6 +1,10 @@
 <!-- NEWS.md is generated from NEWS.Rmd. Please edit that file -->
-paramtest 0.1.0
-===============
+
+# paramtest 0.1.1
+
+-   Minor updates to documentation.
+
+# paramtest 0.1.0
 
 -   Initial release of the paramtest package.
 -   Offers functions for grid search and random search.

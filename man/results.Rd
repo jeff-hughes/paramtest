@@ -22,6 +22,6 @@ Returns a data frame with all the data returned from each test.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{paramtest}: Results for a parameter test.
-}}
+\item \code{results(paramtest)}: Results for a parameter test.
 
+}}

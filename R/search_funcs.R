@@ -23,7 +23,7 @@
 #'   \code{func}. Using this option instead of bootstrapping within \code{func}
 #'   is preferable to take advantage of parallelization.
 #' @param bootParams If \code{boot=TRUE}, then use \code{bootParams} to pass
-#'   along a named list of arguments to the \code{\link{boot}} function. The
+#'   along a named list of arguments to the \code{\link[boot]{boot}} function. The
 #'   statistic and R parameters will be filled automatically, but at minimum you
 #'   will need to pass along data. Information about parallel processing will
 #'   also be passed along automatically.
@@ -43,7 +43,7 @@
 #' @return Returns a list (by default) with one element per iteration. If
 #'   \code{output} is specified as "data.frame", then \code{func} must
 #'   return a (named) vector with the results you wish to capture.
-#' @seealso \code{\link{boot}}
+#' @seealso \code{\link[boot]{boot}}
 #' @examples
 #' lm_test <- function(iter, N, b0, b1) {
 #'     x <- rnorm(N, 0, 1)
@@ -111,7 +111,7 @@ grid_search <- function(func, params=NULL, n.iter=1,
 #'   \code{func}. Using this option instead of bootstrapping within \code{func}
 #'   is preferable to take advantage of parallelization.
 #' @param bootParams If \code{boot=TRUE}, then use \code{bootParams} to pass
-#'   along a named list of arguments to the \code{\link{boot}} function. The
+#'   along a named list of arguments to the \code{\link[boot]{boot}} function. The
 #'   statistic and R parameters will be filled automatically, but at minimum you
 #'   will need to pass along data. Information about parallel processing will
 #'   also be passed along automatically.
@@ -131,7 +131,7 @@ grid_search <- function(func, params=NULL, n.iter=1,
 #' @return Returns a list (by default) with one element per iteration. If
 #'   \code{output} is specified as "data.frame", then \code{func} must
 #'   return a (named) vector with the results you wish to capture.
-#' @seealso \code{\link{boot}}
+#' @seealso \code{\link[boot]{boot}}
 #' @examples
 #' lm_test <- function(iter, N, b0, b1) {
 #'     x <- rnorm(N, 0, 1)

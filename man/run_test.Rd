@@ -4,9 +4,19 @@
 \alias{run_test}
 \title{Run a function iteratively, with options for parallel processing.}
 \usage{
-run_test(func, params = NULL, n.iter = 1, output = c("list",
-  "data.frame"), boot = FALSE, bootParams = NULL, parallel = c("no",
-  "multicore", "snow"), ncpus = 1, cl = NULL, beep = NULL, ...)
+run_test(
+  func,
+  params = NULL,
+  n.iter = 1,
+  output = c("list", "data.frame"),
+  boot = FALSE,
+  bootParams = NULL,
+  parallel = c("no", "multicore", "snow"),
+  ncpus = 1,
+  cl = NULL,
+  beep = NULL,
+  ...
+)
 }
 \arguments{
 \item{func}{A user-defined function. The first argument to this function will
@@ -28,7 +38,7 @@ matrix, or data frame, so it can be coerced into the data frame format. The
 is preferable to take advantage of parallelization.}
 
 \item{bootParams}{If \code{boot=TRUE}, then use \code{bootParams} to pass
-along a named list of arguments to the \code{\link{boot}} function. The
+along a named list of arguments to the \code{\link[boot]{boot}} function. The
 statistic and R parameters will be filled automatically, but at minimum you
 will need to pass along data. Information about parallel processing will
 also be passed along automatically.}
@@ -84,5 +94,5 @@ power_sim <- run_test(lm_test, params=data.frame(N=c(200, 300)),
     n.iter=500, b0=0, b1=.15)
 }
 \seealso{
-\code{\link{boot}}
+\code{\link[boot]{boot}}
 }
